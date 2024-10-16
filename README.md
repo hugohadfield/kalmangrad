@@ -1,6 +1,6 @@
 # Kalmangrad
 
-`kalmangrad` is a python package that calculates automated smooth N'th order derivatives of time series data. The approach leverages Bayesian filtering techniques to compute derivatives up to any specified order, offering a robust alternative to traditional numerical differentiation methods that are sensitive to noise. This package is built on top of the underlying [bayesfilter](https://github.com/hugohadfield/bayesfilter/) package.
+`kalmangrad` is a python package that calculates automated smooth N'th order derivatives of non-uniformly sampled time series data. The approach leverages Bayesian filtering techniques to compute derivatives up to any specified order, offering a robust alternative to traditional numerical differentiation methods that are sensitive to noise. This package is built on top of the underlying [bayesfilter](https://github.com/hugohadfield/bayesfilter/) package.
 
 ![Results](Figure_1.jpeg)
 
@@ -17,7 +17,7 @@
 
 ## Introduction
 
-Estimating derivatives from noisy data is a common challenge in fields like signal processing, control systems, and data analysis. Traditional numerical differentiation amplifies noise, leading to inaccurate results. Anyone who has naiivly attempted to differentiate sensor data has run into this problem. This repository implements a bayesian filtering based method to estimate derivatives of any order, providing smoother and more accurate estimates even in the presence of noise.
+Estimating derivatives from noisy data is a common challenge in fields like signal processing, control systems, and data analysis. Traditional numerical differentiation amplifies noise, leading to inaccurate results. Anyone who has naiivly attempted to differentiate sensor data has run into this problem. This repository implements a bayesian filtering based method to estimate derivatives of any order, providing smoother and more accurate estimates even in the presence of noise and non-uniform sampling.
 
 
 ## Features
@@ -25,7 +25,8 @@ Estimating derivatives from noisy data is a common challenge in fields like sign
 - **Higher-Order Derivative Estimation**: Compute derivatives up to any specified order.
 - **Robust to Noise**: Uses Bayesian filtering to mitigate the effects of noise in the data.
 - **Flexible Time Steps**: Handles non-uniformly sampled data with automatic time step adjustment.
-- **Easy Integration**: Modular functions that can be integrated into existing projects.
+- **Easy Integration**: Its simple API allows for easy integration into existing projects.
+- **Few Dependencies**: Requires only NumPy and the BayesFilter package (which is turn just needs NumPy).
 
 ## Installation
 
