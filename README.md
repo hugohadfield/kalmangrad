@@ -17,7 +17,7 @@
 
 Estimating derivatives from noisy data is a common challenge in fields like signal processing, control systems, and data analysis. Traditional numerical differentiation amplifies noise, leading to inaccurate results. Anyone who has naiivly attempted to differentiate sensor data has run into this problem. This repository implements a bayesian filtering based method to estimate derivatives of any order, providing smoother and more accurate estimates even in the presence of noise.
 
-![Figure_1.jpeg]
+![Results](Figure_1.jpeg)
 
 ## Features
 
