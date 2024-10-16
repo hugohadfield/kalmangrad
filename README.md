@@ -30,20 +30,24 @@ Estimating derivatives from noisy data is a common challenge in fields like sign
 
 ## Installation
 
-1. **Clone the Repository**
+1. **Install from PyPI**:
 
    ```bash
-   git clone https://github.com/yourusername/higher-order-derivative-kalman.git
-   cd higher-order-derivative-kalman
+   pip install kalmangrad
    ```
 
-2. **Install Required Packages**
+2. **Install from Source**:
 
-   Make sure you have Python 3.x installed. Install the required Python packages using pip:
+   - Clone the repository:
 
-   ```bash
-   pip install numpy matplotlib bayesfilter
-   ```
+     ```bash
+     git clone
+      ```
+    - Install the package:
+    
+     ```bash
+     pip install .
+     ```
 
 ## Usage
 
