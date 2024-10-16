@@ -2,6 +2,8 @@
 
 `kalmangrad` is a python package that calculates automated smooth N'th order derivatives of time series data. The approach leverages Bayesian filtering techniques to compute derivatives up to any specified order, offering a robust alternative to traditional numerical differentiation methods that are sensitive to noise. This package is built on top of the underlying [bayesfilter](https://github.com/hugohadfield/bayesfilter/) package.
 
+![Results](Figure_1.jpeg)
+
 ## Table of Contents
 
 - [Introduction](#introduction)
@@ -17,7 +19,6 @@
 
 Estimating derivatives from noisy data is a common challenge in fields like signal processing, control systems, and data analysis. Traditional numerical differentiation amplifies noise, leading to inaccurate results. Anyone who has naiivly attempted to differentiate sensor data has run into this problem. This repository implements a bayesian filtering based method to estimate derivatives of any order, providing smoother and more accurate estimates even in the presence of noise.
 
-![Results](Figure_1.jpeg)
 
 ## Features
 
