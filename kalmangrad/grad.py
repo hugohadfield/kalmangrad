@@ -114,25 +114,54 @@ def grad(
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
-
-    # Generate data
+    
+    # Generate noisy sinusoidal data
     np.random.seed(0)
-    # t = np.linspace(0, 10, 100)
-    t = np.random.uniform(0.0, 10.0, 100)
-    t.sort()
-    noise_std = 0.001
-    y = np.sin(t) + noise_std*np.random.randn(len(t))
-    ydash = np.cos(t)
+    t = np.linspace(0, 10, 100)
+    noise_std = 0.01
+    y = np.sin(t) + noise_std * np.random.randn(len(t))
+    true_first_derivative = np.cos(t)
+    true_second_derivative = -np.sin(t)
 
-    # Run the Kalman filter
-    N = 2
-    filter_states, filter_times = grad(y, t, n=N)
+    # Estimate derivatives using the Kalman filter
+    N = 2  # Order of the highest derivative to estimate
+    smoother_states, filter_times = grad(y, t, n=N)
+
+    # Extract estimated derivatives
+    estimated_position = [state.mean()[0] for state in smoother_states]
+    estimated_first_derivative = [state.mean()[1] for state in smoother_states]
+    estimated_second_derivative = [state.mean()[2] for state in smoother_states]
 
     # Plot the results
-    plt.plot(t, y, label=f"True data {0}")
-    plt.plot(t, ydash, label=f"True data {1}")
-    plt.plot(filter_times, [fs.mean()[0] for fs in filter_states], label=f"Filtered data {0}")
-    plt.plot(filter_times, [fs.mean()[1] for fs in filter_states], label=f"Filtered data {1}")
-    plt.plot(t, np.gradient(y, t))
-    plt.legend()
+    plt.figure(figsize=(12, 9))
+
+    # Position
+    plt.subplot(3, 1, 1)
+    plt.plot(t, y, 'k.', label='Noisy Observations')
+    plt.plot(filter_times, estimated_position, 'b-', label='Estimated Position')
+    plt.plot(t, np.sin(t), 'r--', label='True Position')
+    plt.legend(loc='upper right')
+    plt.title('Position')
+
+    # First Derivative
+    plt.subplot(3, 1, 2)
+    plt.plot(filter_times, estimated_first_derivative, 'b-', label='Estimated First Derivative')
+    plt.plot(t, true_first_derivative, 'r--', label='True First Derivative')
+    plt.plot(
+        t,
+        np.gradient(y, t),
+        'k-',
+        label='np.gradient calculated derivative'
+    )
+    plt.legend(loc='upper right')
+    plt.title('First Derivative')
+
+    # Second Derivative
+    plt.subplot(3, 1, 3)
+    plt.plot(filter_times, estimated_second_derivative, 'b-', label='Estimated Second Derivative')
+    plt.plot(t, true_second_derivative, 'r--', label='True Second Derivative')
+    plt.legend(loc='upper right')
+    plt.title('Second Derivative')
+
+    plt.tight_layout()
     plt.show()
