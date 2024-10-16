@@ -115,9 +115,9 @@ def grad(
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
     
-    # Generate noisy sinusoidal data
+    # Generate noisy sinusoidal data with random time points
     np.random.seed(0)
-    t = np.linspace(0, 10, 100)
+    t = sorted(np.random.uniform(0.0, 10.0, 100))
     noise_std = 0.01
     y = np.sin(t) + noise_std * np.random.randn(len(t))
     true_first_derivative = np.cos(t)
@@ -141,6 +141,7 @@ if __name__ == "__main__":
     plt.plot(filter_times, estimated_position, 'b-', label='Estimated Position')
     plt.plot(t, np.sin(t), 'r--', label='True Position')
     plt.legend(loc='upper right')
+    plt.ylim(-1.5, 1.5)
     plt.title('Position')
 
     # First Derivative
@@ -154,6 +155,7 @@ if __name__ == "__main__":
         label='np.gradient calculated derivative'
     )
     plt.legend(loc='upper right')
+    plt.ylim(-1.5, 1.5)
     plt.title('First Derivative')
 
     # Second Derivative
@@ -161,6 +163,7 @@ if __name__ == "__main__":
     plt.plot(filter_times, estimated_second_derivative, 'b-', label='Estimated Second Derivative')
     plt.plot(t, true_second_derivative, 'r--', label='True Second Derivative')
     plt.legend(loc='upper right')
+    plt.ylim(-1.5, 1.5)
     plt.title('Second Derivative')
 
     plt.tight_layout()
