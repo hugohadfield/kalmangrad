@@ -83,10 +83,9 @@ import matplotlib.pyplot as plt
 # Import the grad function
 from kalmangrad import grad  # Replace with the actual module name
 
-
-# Generate noisy sinusoidal data
+# Generate noisy sinusoidal data with random time points
 np.random.seed(0)
-t = np.linspace(0, 10, 100)
+t = sorted(np.random.uniform(0.0, 10.0, 100))
 noise_std = 0.01
 y = np.sin(t) + noise_std * np.random.randn(len(t))
 true_first_derivative = np.cos(t)
@@ -110,6 +109,7 @@ plt.plot(t, y, 'k.', label='Noisy Observations')
 plt.plot(filter_times, estimated_position, 'b-', label='Estimated Position')
 plt.plot(t, np.sin(t), 'r--', label='True Position')
 plt.legend(loc='upper right')
+plt.ylim(-1.5, 1.5)
 plt.title('Position')
 
 # First Derivative
@@ -123,6 +123,7 @@ plt.plot(
     label='np.gradient calculated derivative'
 )
 plt.legend(loc='upper right')
+plt.ylim(-1.5, 1.5)
 plt.title('First Derivative')
 
 # Second Derivative
@@ -130,6 +131,7 @@ plt.subplot(3, 1, 3)
 plt.plot(filter_times, estimated_second_derivative, 'b-', label='Estimated Second Derivative')
 plt.plot(t, true_second_derivative, 'r--', label='True Second Derivative')
 plt.legend(loc='upper right')
+plt.ylim(-1.5, 1.5)
 plt.title('Second Derivative')
 
 plt.tight_layout()
