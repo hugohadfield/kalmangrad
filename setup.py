@@ -1,5 +1,6 @@
 
 from setuptools import setup, find_packages
+import os
 
 here = os.path.abspath(os.path.dirname(__file__))
 exec(open(os.path.join(here, 'kalmangrad/version.py')).read())
