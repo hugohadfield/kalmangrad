@@ -44,8 +44,6 @@ Estimating derivatives from noisy data is a common challenge in fields like sign
    pip install numpy matplotlib bayesfilter
    ```
 
-   > **Note**: If you encounter issues installing the `bayesfilter` package, ensure it's available in your Python environment or replace it with an equivalent Bayesian filtering package.
-
 ## Usage
 
 The main function provided is `grad`, which estimates the derivatives of the input data `y` sampled at times `t`.
