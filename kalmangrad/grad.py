@@ -64,10 +64,13 @@ def grad(
     """
     if len(y) != len(t):
         raise ValueError("The length of y and t must be the same.")
+
+    y_array = np.array(y)
+    t_array = np.array(t)
     
     # Check the time step
     if delta_t is None:
-        delta_t = abs(np.mean(np.diff(t))/4.0)
+        delta_t = abs(np.mean(np.diff(t_array))/4.0)
     if delta_t <= 0:
         raise ValueError("delta_t must be positive.")
     if t[-1] - t[0] < 2*delta_t:
@@ -90,14 +93,14 @@ def grad(
 
     # Initial state
     initial_state_mean = np.zeros(n+1)
-    initial_state_mean[0] = y[0]
+    initial_state_mean[0] = y_array[0]
     initial_state = Gaussian(initial_state_mean, np.eye(n+1))
 
     # Create observations
     observations = []
-    for i in range(len(y)):
+    for i in range(len(y_array)):
         new_obs = Observation(
-            y[i],
+            y_array[i],
             (obs_noise_std**2)*np.eye(1),
             observation_func = observation_func,
             jacobian_func = jac_observation_func
@@ -106,7 +109,7 @@ def grad(
 
     # Run a bayesian filter
     filter = BayesianFilter(transition_model, initial_state)
-    filter_states, filter_times = filter.run(observations, t, 1.0/delta_t, use_jacobian=True)
+    filter_states, filter_times = filter.run(observations, t_array, 1.0/delta_t, use_jacobian=True)
     smoother = RTS(filter)
     smoother_states = smoother.apply(filter_states, filter_times, use_jacobian=False)
     return smoother_states, filter_times

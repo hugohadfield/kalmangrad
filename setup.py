@@ -1,8 +1,13 @@
+
 from setuptools import setup, find_packages
+
+here = os.path.abspath(os.path.dirname(__file__))
+exec(open(os.path.join(here, 'kalmangrad/version.py')).read())
 
 setup(
     name='kalmangrad',
-    version='0.0.1',
+     # Read from VERSION file
+    version=__version__,
     description="Automated, smooth, N'th order derivatives of non-uniformly sampled time series data",
     author='Hugo Hadfield',
     author_email='hadfield.hugo@gmail.com',
