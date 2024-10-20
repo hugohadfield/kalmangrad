@@ -79,7 +79,7 @@ def grad(
     for a given time step is only a function of the data up to that time step) or an offline fashion (where the filter
     output for a given time step is a function of *all* the data, this is the default and probably what you want!).
     - final_cov (float, optional):
-     Final covariance on the diagonal of the process noise matrix, corresponding to the expected
+    Final covariance on the diagonal of the process noise matrix, corresponding to the expected
     reasonable change (squared) in the highest derivative per timestep. All other covariance diagonals are set to 
     very small values to force the filter to integrate rather than jump. If you have very large or very small magnitude
     data, you may need to adjust this value.
