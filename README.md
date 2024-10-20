@@ -41,11 +41,12 @@ Estimating derivatives from noisy data is a common challenge in fields like sign
    - Clone the repository:
 
      ```bash
-     git clone
+     git clone git@github.com:hugohadfield/kalmangrad.git
       ```
     - Install the package:
     
      ```bash
+     cd kalmangrad
      pip install .
      ```
 
@@ -209,7 +210,7 @@ Computes the Jacobian of the observation function with respect to the state vect
 - **Returns**:
   - `np.ndarray`: Jacobian matrix of size `(1, n+1)`.
 
-### `grad(y, t, n=1, delta_t=None, obs_noise_std=1e-2)`
+### `grad(y, t, n=1, delta_t=None, obs_noise_std=1e-2, online=False, final_cov=1e-4)`
 
 Main function to estimate the derivatives of the input data `y` up to order `n`.
 
@@ -219,6 +220,8 @@ Main function to estimate the derivatives of the input data `y` up to order `n`.
   - `n (int)`: Maximum order of derivative to estimate (default is `1`).
   - `delta_t (float, optional)`: Time step for the Kalman filter. If `None`, it is automatically determined.
   - `obs_noise_std (float)`: Standard deviation of the observation noise.
+  - `online (bool)`: Flag to run the Kalman filter in an online fashion.
+  - `final_cov (float)`: Final covariance on the diagonal of the process noise matrix.
 
 - **Returns**:
   - `smoother_states (List[Gaussian])`: List of Gaussian states containing mean and covariance estimates for each time step.
