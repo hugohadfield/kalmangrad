@@ -1,4 +1,6 @@
 
+from typing import List, Tuple
+
 import numpy as np
 import math
 
@@ -59,28 +61,32 @@ def grad(
     obs_noise_std = 1e-2,
     online: bool = False,
     final_cov: float = 1e-4
-) -> np.ndarray:
+) -> Tuple[List[Gaussian], np.ndarray]:
     """
-    The data y is sampled at times t. 
-    The function returns the gradient of y with respect to t. 
-    
-    n is the max order derivative calculated.
-    
-    delta_t is the step in t used to run the kalman filter. 
+    Estimates the derivatives of the input data `y` up to order `n` using Bayesian filtering/smoothing.
 
-    obs_noise_std is the standard deviation of the observation noise (default 1e-2), 
+    Parameters:
+    - y (np.ndarray): Observed data array sampled at time points `t`.
+    - t (np.ndarray): Time points corresponding to `y`.
+    - n (int, optional): Maximum order of derivative to estimate (default is 1).
+    - delta_t (float, optional): Time step for the Bayesian filter. If None, it's automatically determined.
+    - obs_noise_std (float, optional): Standard deviation of the observation noise (default 1e-2), 
     setting obs_noise_std will tell the function to expect noise of that magnitude in the data.
     Depending on what units the data is in (is it very very big numbers or very very small ones?), 
     and how noisy it is, this value may need to be adjusted by users.
-
-    online is a flag that tells the function to run the kalman filter in an online fashion (where the filter output
+    - online (bool, optional): 
+    Flag that tells the function to run the Bayesian filter in an online fashion (where the filter output
     for a given time step is only a function of the data up to that time step) or an offline fashion (where the filter
-    output for a given time step is a function of all the data, this is the default and probably what you want!).
-
-    final_cov is the final covariance on the diagonal of the process noise matrix, corresponding to the expected
+    output for a given time step is a function of *all* the data, this is the default and probably what you want!).
+    - final_cov (float, optional):
+     Final covariance on the diagonal of the process noise matrix, corresponding to the expected
     reasonable change (squared) in the highest derivative per timestep. All other covariance diagonals are set to 
     very small values to force the filter to integrate rather than jump. If you have very large or very small magnitude
     data, you may need to adjust this value.
+
+    Returns:
+    - smoother_states (List[Gaussian]): List of Gaussian states containing mean and covariance estimates for each derivative.
+    - filter_times (np.ndarray): Time points corresponding to the estimates.
     """
     if len(y) != len(t):
         raise ValueError("The length of y and t must be the same.")
@@ -152,7 +158,7 @@ if __name__ == "__main__":
     true_first_derivative = np.cos(t)
     true_second_derivative = -np.sin(t)
 
-    # Estimate derivatives using the Kalman filter
+    # Estimate derivatives using the Bayesian smoother
     N = 2  # Order of the highest derivative to estimate
     smoother_states, filter_times = grad(y, t, n=N)
 
