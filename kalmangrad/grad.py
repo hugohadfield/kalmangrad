@@ -56,11 +56,31 @@ def grad(
     t: np.ndarray, 
     n: int = 1,
     delta_t = None,
-    obs_noise_std = 1e-2
+    obs_noise_std = 1e-2,
+    online: bool = False,
+    final_cov: float = 1e-4
 ) -> np.ndarray:
     """
-    The data y is sampled at times t. The function returns the gradient of y with respect to t. 
-    delta_t is the step in t used to run the kalman filter. n is the max order derivative calculated.
+    The data y is sampled at times t. 
+    The function returns the gradient of y with respect to t. 
+    
+    n is the max order derivative calculated.
+    
+    delta_t is the step in t used to run the kalman filter. 
+
+    obs_noise_std is the standard deviation of the observation noise (default 1e-2), 
+    setting obs_noise_std will tell the function to expect noise of that magnitude in the data.
+    Depending on what units the data is in (is it very very big numbers or very very small ones?), 
+    and how noisy it is, this value may need to be adjusted by users.
+
+    online is a flag that tells the function to run the kalman filter in an online fashion (where the filter output
+    for a given time step is only a function of the data up to that time step) or an offline fashion (where the filter
+    output for a given time step is a function of all the data, this is the default and probably what you want!).
+
+    final_cov is the final covariance on the diagonal of the process noise matrix, corresponding to the expected
+    reasonable change (squared) in the highest derivative per timestep. All other covariance diagonals are set to 
+    very small values to force the filter to integrate rather than jump. If you have very large or very small magnitude
+    data, you may need to adjust this value.
     """
     if len(y) != len(t):
         raise ValueError("The length of y and t must be the same.")
@@ -84,7 +104,7 @@ def grad(
 
     # Process model
     covariance = 1e-16*np.eye(n+1)
-    covariance[n, n] = 1e-4
+    covariance[n, n] = final_cov
     transition_model = StateTransitionModel(
         lambda x, dt: transition_func(x, dt, n), 
         covariance,
@@ -107,12 +127,18 @@ def grad(
         )
         observations.append(new_obs)
 
-    # Run a bayesian filter
+    # Run Bayesian filtering/smoothing
     filter = BayesianFilter(transition_model, initial_state)
     filter_states, filter_times = filter.run(observations, t_array, 1.0/delta_t, use_jacobian=True)
-    smoother = RTS(filter)
-    smoother_states = smoother.apply(filter_states, filter_times, use_jacobian=False)
-    return smoother_states, filter_times
+    if not online:
+        # In the offline case, run a Rauch-Tung-Striebel smoother (RTS) to make use of all information
+        # for all timesteps
+        smoother = RTS(filter)
+        output_states = smoother.apply(filter_states, filter_times, use_jacobian=False)
+    else:
+        # In the online case, the output states are the same as the filter states
+        output_states = filter_states
+    return output_states, filter_times
 
 
 if __name__ == "__main__":
